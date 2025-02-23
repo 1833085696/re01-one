@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拼音位置查询</title>
+  <style>
+    body { padding: 20px; font-family: Arial; }
+    input { width: 200px; padding: 8px; margin: 10px 0; }
+    #result { color: #333; font-size: 16px; }
+    .hint { color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h3>输入拼音（如 "ni"），查询词语和位置：</h3>
+  <input type="text" id="input" placeholder="输入拼音">
+  <div id="result"></div>
+
+  <script>
+    // 预定义的映射表：拼音 → { 词语, 位置 }
+    const wordMap = {
+      "a": { word: "啊", position: "1排1列" },
+      "ai": { word: "爱", position: "1排2列" },
+      "ni": { word: "你", position: "2排1列" },
+      "hao": { word: "好", position: "2排2列" },
+      "ma": { word: "吗", position: "3排1列" }
+      // 可继续添加更多映射...
+    };
+
+    // 获取输入框和结果元素
+    const input = document.getElementById("input");
+    const resultDiv = document.getElementById("result");
+
+    // 监听输入事件
+    input.addEventListener("input", (e) => {
+      const pinyin = e.target.value.trim().toLowerCase(); // 转为小写
+      resultDiv.innerHTML = "";
+
+      if (!pinyin) return;
+
+      // 直接匹配映射表
+      if (wordMap[pinyin]) {
+        const { word, position } = wordMap[pinyin];
+        resultDiv.innerHTML = `
+          <div>词语：${word}</div>
+          <div>位置：${position}</div>
+        `;
+      } else {
+        // 显示可能的拼音提示（可选）
+        const hints = Object.keys(wordMap).filter(key => key.startsWith(pinyin));
+        if (hints.length > 0) {
+          resultDiv.innerHTML = `<div class="hint">提示：尝试输入 ${hints.join(", ")}</div>`;
+        } else {
+          resultDiv.innerHTML = "<div class='hint'>未找到匹配项</div>";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
